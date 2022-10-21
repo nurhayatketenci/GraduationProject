@@ -33,7 +33,7 @@ public class UserController {
         return ResponseEntity.ok(userService.getAllUsers());
     }
     @GetMapping("/{id}")
-	public ResponseEntity<User> getCategory(@PathVariable(name = "id") int id) {
+	public ResponseEntity<User> getUser(@PathVariable(name = "id") int id) {
 		return userService.getUser(id);
 	}
     
