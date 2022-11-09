@@ -1,6 +1,7 @@
 package Project.Graduation.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -12,7 +13,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.bind.annotation.PathVariable;
+
+
 
 import Project.Graduation.model.User;
 import Project.Graduation.service.UserService;
@@ -41,7 +43,14 @@ public class UserController {
 	public ResponseEntity<User> deleteUser(@PathVariable(name = "id") int id) {
 		return userService.deleteUser(id);
 	}
-    
+    @PutMapping("/update/{id}")
+	public ResponseEntity<User> updateUser(@PathVariable(value = "id") int id,  @RequestBody User newUser) {
+    	return userService.updateUser(id, newUser);
+	}
+    @PostMapping("create")
+    public ResponseEntity<User> createUser(@RequestBody User user){
+    	return userService.addUser(user);
+    }
    
    
   

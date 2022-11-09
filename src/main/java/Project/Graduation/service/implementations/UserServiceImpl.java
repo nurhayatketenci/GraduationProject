@@ -30,9 +30,6 @@ public class UserServiceImpl implements UserService{
 	@Override
 	public ResponseEntity<User> getUser(int id) {
         User user=this.userRepository.findById(id).orElseThrow(NoSuchElementException ::new);
-        //orElseThrow->varsa al yoksa hata fırlat 
-        //ResourceNotFoundException->kaynak bulunamadi hatasi 
-        // optional boş ise NoSuchElementException
 		return new ResponseEntity<>(user,HttpStatus.OK);
 	}
 
@@ -46,6 +43,12 @@ public class UserServiceImpl implements UserService{
 	public ResponseEntity<User> updateUser(int id, User newUser) {
 		User user=this.userRepository.findById(id).orElseThrow(NoSuchElementException :: new);
 		user.setUsername(newUser.getUsername());
+		user.setFirstName(newUser.getFirstName());
+		user.setLastName(newUser.getLastName());
+		user.setAge(newUser.getAge());
+		user.setEmail(newUser.getEmail());
+		user.setLevel(newUser.getLevel());
+		user.setPhoneNumber(newUser.getPhoneNumber());
 		User updatedUser=this.userRepository.save(user);
 		return new ResponseEntity<>(updatedUser, HttpStatus.OK);
 	}
