@@ -1,76 +1,98 @@
 package Project.Graduation.service.implementations;
 
-import java.util.List;
-import java.util.NoSuchElementException;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.*;
 
+import Project.Graduation.model.Instructor;
+import Project.Graduation.model.UserImage;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
-
 import Project.Graduation.model.User;
 import Project.Graduation.repository.UserRepository;
 import Project.Graduation.service.UserService;
+import org.springframework.util.StringUtils;
+import org.springframework.web.multipart.MultipartFile;
 
 @Service
 public class UserServiceImpl implements UserService{
-	   private UserRepository userRepository;
-	   
-	   @Autowired
-	    public UserServiceImpl(UserRepository userRepository) {
-	        this.userRepository = userRepository;
-	    }
+	 @Autowired
+	 private UserRepository userRepository;
+
+	@Value("${app.upload.dir}")
+	private String uploadDir;
+
 
 	@Override
 	public List<User> getAllUsers() {
-		List<User> users=this.userRepository.findAll();
-		return users;
+		return new ArrayList<User>((Collection<? extends User>) userRepository.findAll());
 	}
 	
 	@Override
-	public ResponseEntity<User> getUser(int id) {
-        User user=this.userRepository.findById(id).orElseThrow(NoSuchElementException ::new);
-		return new ResponseEntity<>(user,HttpStatus.OK);
+	public User getUserById(Long id) {
+		return userRepository.findById(id).orElseThrow(() -> new RuntimeException("Couldnt find user by id: " + id));
 	}
 
 	@Override
-	public ResponseEntity<User> addUser(User user) {
-		User newUser=this.userRepository.save(user);
-		return new ResponseEntity<>(newUser, HttpStatus.CREATED); 
+	public User addUser(User user) {
+		return userRepository.save(user);
 	}
 
 	@Override
-	public ResponseEntity<User> updateUser(int id, User newUser) {
+	public User updateUser(Long id, User newUser) {
 		User user=this.userRepository.findById(id).orElseThrow(NoSuchElementException :: new);
 		user.setUsername(newUser.getUsername());
 		user.setFirstName(newUser.getFirstName());
 		user.setLastName(newUser.getLastName());
 		user.setAge(newUser.getAge());
 		user.setEmail(newUser.getEmail());
-		user.setLevel(newUser.getLevel());
 		user.setPhoneNumber(newUser.getPhoneNumber());
-		User updatedUser=this.userRepository.save(user);
-		return new ResponseEntity<>(updatedUser, HttpStatus.OK);
+		return userRepository.save(user);
 	}
+	@Override
+	public String uploadImage(Long userId, MultipartFile file) throws IOException {
+		User user = userRepository.findById(userId)
+				.orElseThrow(() ->  new RuntimeException("Couldnt find user by id: " + userId));
+
+		String fileName = StringUtils.cleanPath(file.getOriginalFilename());
+		String fileExtension = StringUtils.getFilenameExtension(fileName);
+		String newFileName = "user_" + user.getId() + "." + fileExtension;
+		String uploadPath = uploadDir + "/" + newFileName;
+		Path uploadPathDir = Paths.get(uploadDir);
+		if (!Files.exists(uploadPathDir)) {
+			Files.createDirectories(uploadPathDir);
+		}
+
+		Path uploadPathFile = Paths.get(uploadPath);
+		Files.deleteIfExists(uploadPathFile);
+		Files.copy(file.getInputStream(), uploadPathFile);
+
+		user.setImagePath(uploadPath);
+		userRepository.save(user);
+
+		return uploadPath;
+	}
+
 
 	@Override
-	public ResponseEntity<User> deleteUser(int id) {
-		this.userRepository.deleteById(id);
-		return new ResponseEntity<>( HttpStatus.OK);
+	public User deleteUser(Long id) {
+		User user=getUserById(id);
+		userRepository.save(user);
+		return user;
 	}
-	
+	@Override
+	public User getUserDetails(){
+		String email = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		return userRepository.findByEmail(email).get();
+	}
 
 
-	
 
-	
-
-	
-
-		
-
-	
-		   
-	
 
 }

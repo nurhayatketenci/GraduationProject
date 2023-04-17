@@ -1,16 +1,20 @@
 package Project.Graduation.service;
 
+import java.io.IOException;
 import java.util.List;
 
 import org.springframework.http.ResponseEntity;
 
 import Project.Graduation.model.User;
+import org.springframework.web.multipart.MultipartFile;
 
 public interface UserService {
     List<User> getAllUsers();
-    ResponseEntity<User> getUser(int id);
-    ResponseEntity<User> addUser(User user);
-    ResponseEntity<User> updateUser(int id, User newUser);
-	ResponseEntity<User> deleteUser(int id) ;
-     
+    User getUserById(Long id);
+    User addUser(User user);
+    User updateUser(Long id, User newUser);
+	User deleteUser(Long id) ;
+    public String uploadImage(Long userId, MultipartFile file) throws IOException;
+    public User getUserDetails();
+
 }

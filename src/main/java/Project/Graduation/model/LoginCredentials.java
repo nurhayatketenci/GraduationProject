@@ -1,2 +1,15 @@
-package Project.Graduation.model;public class LoginCredentials {
+package Project.Graduation.model;
+
+import lombok.*;
+
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
+@ToString
+public class LoginCredentials {
+
+    private String email;
+    private String password;
+
 }

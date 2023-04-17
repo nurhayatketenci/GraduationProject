@@ -1,11 +1,10 @@
 package Project.Graduation.model;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import java.util.List;
+
+import javax.persistence.*;
+
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -13,28 +12,14 @@ import lombok.NoArgsConstructor;
 
 @Data
 @Entity
-@Table(name="instructor")
 @NoArgsConstructor
 @AllArgsConstructor
-public class Instructor {
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name="id")
-	private int id;
-	
-	@Column(name="first_name")
-	private String firstName;
-	
-	@Column(name="last_name")
-	private String lastName;
-	
-	@Column(name="country")
-	private String country;
-	
-	@Column(name="lesson_id")
-	private int lessonId;
-	
-	@Column(name="student_id")
-	private int studentId;
-	
+@Table(name="instructors")
+@DiscriminatorValue("instructor")
+public class Instructor extends User{
+
+	private String description;
+
+
+
 }
