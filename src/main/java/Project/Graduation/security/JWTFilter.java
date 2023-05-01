@@ -1,4 +1,4 @@
-package Project.Graduation.Security;
+package Project.Graduation.security;
 
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import org.springframework.beans.factory.annotation.Autowired;

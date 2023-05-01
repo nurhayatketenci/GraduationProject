@@ -1,15 +1,14 @@
 package Project.Graduation.service.implementations;
 
+import Project.Graduation.exception.RecordAlreadyExistsException;
 import Project.Graduation.model.Instructor;
 import Project.Graduation.model.Language;
 import Project.Graduation.repository.LanguageRepository;
 import Project.Graduation.service.LanguageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.NoSuchElementException;
+
+import java.util.*;
 
 @Service
 public class LanguageServiceImpl implements LanguageService {
@@ -28,6 +27,10 @@ public class LanguageServiceImpl implements LanguageService {
 
     @Override
     public Language addLanguage(Language language) {
+        Optional<Language> checkLanguage=languageRepository.findByLanguageName(language.getLanguageName());
+        if(checkLanguage.isPresent()){
+            throw new RecordAlreadyExistsException("This language is already exists.");
+        }
         return languageRepository.save(language);
     }
 

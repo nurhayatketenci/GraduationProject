@@ -1,4 +1,4 @@
-package Project.Graduation.Security;
+package Project.Graduation.security;
 
 import Project.Graduation.model.User;
 import Project.Graduation.repository.UserRepository;

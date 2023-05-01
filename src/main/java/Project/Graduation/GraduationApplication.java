@@ -10,7 +10,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.session.data.redis.config.annotation.web.http.EnableRedisHttpSession;
 
 @SpringBootApplication
-@EnableRedisHttpSession(maxInactiveIntervalInSeconds = 1800)
 public class GraduationApplication {
 
 	public static void main(String[] args) {

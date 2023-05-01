@@ -2,10 +2,9 @@ package Project.Graduation.service.implementations;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Base64;
-import java.util.Collection;
-import java.util.List;
+import java.util.*;
+
+import Project.Graduation.exception.RecordAlreadyExistsException;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,8 +31,12 @@ public class InstructorServiceImpl implements InstructorService{
 
 	@Override
 	public Instructor addInstructor(Instructor instructor) {
+        Optional<Instructor> checkInstructor=instructorRepository.findByEmail(instructor.getEmail());
+		if(!checkInstructor.isPresent()){
+			return instructorRepository.save(instructor);
+		}
+		throw new RecordAlreadyExistsException("This email is already exists.");
 
-		return instructorRepository.save(instructor);
 	}
 
 	@Override

@@ -1,4 +1,4 @@
-package Project.Graduation.Security;
+package Project.Graduation.security;
 
 import Project.Graduation.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +22,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired private UserRepository userRepo;
     @Autowired private JWTFilter filter;
     @Autowired private MyUserDetailsService uds;
+
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {

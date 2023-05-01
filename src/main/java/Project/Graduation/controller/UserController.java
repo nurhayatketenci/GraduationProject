@@ -76,20 +76,10 @@ public class UserController {
     public ResponseEntity<ByteArrayResource> getUserImage(@PathVariable String id,
                                                           @PathVariable String imageName) throws IOException {
         String imagePath = uploadDir + imageName;
-
-        // Dosya yolunu belirleyin
         Path imagePathObj = Paths.get(imagePath);
-
-        // Resmi okuyun
         byte[] imageData = Files.readAllBytes(imagePathObj);
-
-        // MIME türünü belirleyin
         String contentType = Files.probeContentType(imagePathObj);
-
-        // Byte verilerini içeren bir ByteArrayResource nesnesi oluşturun
         ByteArrayResource resource = new ByteArrayResource(imageData);
-
-        // ResponseEntity'yi döndürün
         return ResponseEntity.ok()
                 .contentType(MediaType.parseMediaType(contentType))
                 .body(resource);

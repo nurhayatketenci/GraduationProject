@@ -1,4 +1,4 @@
-package Project.Graduation.Security;
+package Project.Graduation.security;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTVerifier;
