@@ -1,5 +1,7 @@
 package Project.Graduation.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -19,8 +21,12 @@ public class Topics {
     private Long id;
 
     private String header;
+
     private String description;
+
     private String imagePath;
-    @OneToMany(mappedBy = "topics", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<TopicFiles> files = new ArrayList<>();
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "topics")
+    private List<TopicFiles> files ;
 }

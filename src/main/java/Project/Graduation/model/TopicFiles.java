@@ -20,7 +20,7 @@ public class TopicFiles {
     private String description;
     private String filePath;
 
-    @ManyToOne
+    @ManyToOne()
     @JoinColumn(name = "topics_id")
     private Topics topics;
 }
