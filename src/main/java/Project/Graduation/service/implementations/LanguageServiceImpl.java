@@ -1,5 +1,6 @@
 package Project.Graduation.service.implementations;
 
+import Project.Graduation.exception.NoDataFoundException;
 import Project.Graduation.exception.RecordAlreadyExistsException;
 import Project.Graduation.model.Instructor;
 import Project.Graduation.model.Language;
@@ -22,7 +23,7 @@ public class LanguageServiceImpl implements LanguageService {
 
     @Override
     public Language getLanguageById(Long id) {
-        return languageRepository.findById(id).orElseThrow(() -> new RuntimeException("Couldnt find language by id: " + id));
+        return languageRepository.findById(id).orElseThrow(() -> new NoDataFoundException("Couldnt find language by id: " + id));
     }
 
     @Override

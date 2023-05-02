@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.*;
 
+import Project.Graduation.exception.NoDataFoundException;
 import Project.Graduation.exception.RecordAlreadyExistsException;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
@@ -26,7 +27,7 @@ public class InstructorServiceImpl implements InstructorService{
 
 	@Override
 	public Instructor getInstructorById(Long id) {
-		 return instructorRepository.findById(id).orElseThrow(() -> new RuntimeException("Couldnt find instructor by id: " + id));
+		 return instructorRepository.findById(id).orElseThrow(() -> new NoDataFoundException("Couldnt find instructor by id: " + id));
 	}
 
 	@Override

@@ -1,5 +1,6 @@
 package Project.Graduation.service.implementations;
 
+import Project.Graduation.exception.NoDataFoundException;
 import Project.Graduation.exception.RecordAlreadyExistsException;
 import Project.Graduation.security.JWTUtil;
 import Project.Graduation.model.LoginCredentials;
@@ -63,7 +64,7 @@ public class AuthServiceImpl implements AuthService {
 
         }catch (AuthenticationException authExc){
 
-            throw new RuntimeException("Invalid Login Credentials");
+            throw new NoDataFoundException("Invalid Login Credentials");
 
         }
     }

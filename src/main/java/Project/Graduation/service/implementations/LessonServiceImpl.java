@@ -3,6 +3,7 @@ package Project.Graduation.service.implementations;
 import java.util.List;
 import java.util.NoSuchElementException;
 
+import Project.Graduation.exception.NoDataFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -25,7 +26,7 @@ public class LessonServiceImpl implements LessonService{
 
 	@Override
 	public Lesson getLessonById(Long id) {
-		return lessonRepository.findById(id).orElseThrow(() -> new RuntimeException("Couldnt find lesson by id: " + id));
+		return lessonRepository.findById(id).orElseThrow(() -> new NoDataFoundException("Couldnt find lesson by id: " + id));
 	}
 
 	@Override

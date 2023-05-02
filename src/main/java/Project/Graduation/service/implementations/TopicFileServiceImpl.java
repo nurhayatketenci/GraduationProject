@@ -1,5 +1,6 @@
 package Project.Graduation.service.implementations;
 
+import Project.Graduation.exception.NoDataFoundException;
 import Project.Graduation.exception.RecordAlreadyExistsException;
 import Project.Graduation.model.TopicFiles;
 import Project.Graduation.model.Topics;
@@ -34,7 +35,7 @@ public class TopicFileServiceImpl implements TopicFileService {
 
     @Override
     public TopicFiles getTopicFileById(Long id) {
-        return topicFileRepository.findById(id).orElseThrow(() -> new RuntimeException("Couldnt find topic file by id: " + id));
+        return topicFileRepository.findById(id).orElseThrow(() -> new NoDataFoundException("Couldnt find topic file by id: " + id));
 
     }
 

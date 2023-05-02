@@ -1,5 +1,6 @@
 package Project.Graduation.service.implementations;
 
+import Project.Graduation.exception.NoDataFoundException;
 import Project.Graduation.exception.RecordAlreadyExistsException;
 import Project.Graduation.model.Topics;
 import Project.Graduation.model.User;
@@ -32,7 +33,7 @@ public class TopicServiceImpl implements TopicService {
 
     @Override
     public Topics getTopicById(Long id) {
-        return topicRepository.findById(id).orElseThrow(() -> new RuntimeException("Couldnt find topic by id: " + id));
+        return topicRepository.findById(id).orElseThrow(() -> new NoDataFoundException("Couldnt find topic by id: " + id));
     }
 
     @Override

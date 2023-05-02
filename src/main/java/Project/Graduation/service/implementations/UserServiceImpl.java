@@ -6,6 +6,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.*;
 
+import Project.Graduation.exception.NoDataFoundException;
 import Project.Graduation.model.Instructor;
 import Project.Graduation.model.UserImage;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,7 +37,7 @@ public class UserServiceImpl implements UserService{
 	
 	@Override
 	public User getUserById(Long id) {
-		return userRepository.findById(id).orElseThrow(() -> new RuntimeException("Couldnt find user by id: " + id));
+		return userRepository.findById(id).orElseThrow(() -> new NoDataFoundException("Couldnt find user by id: " + id));
 	}
 
 	@Override
