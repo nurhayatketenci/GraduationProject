@@ -3,11 +3,17 @@ package Project.Graduation.controller;
 import Project.Graduation.model.Topics;
 import Project.Graduation.service.TopicService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.ByteArrayResource;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 
 @RestController
@@ -37,10 +43,25 @@ public class TopicsController {
     ResponseEntity<Topics> updateTopic(@PathVariable(value="id") Long id,@RequestBody Topics newTopic){
         return ResponseEntity.ok(topicService.updateTopic(id, newTopic));
     }
-    @PostMapping("/{id}/image")
+    @PostMapping("/uploadimage/{id}")
     public ResponseEntity<?> uploadImage(@PathVariable("id") Long userId,
                                          @RequestParam("image") MultipartFile image) throws IOException {
         String imagePath = topicService.uploadImage(userId, image);
         return ResponseEntity.ok(imagePath);
+    }
+
+    //ClassPathResource sınıfını kullanarak dosyayı okuyoruz
+    @GetMapping("/image/{id}")
+    public ResponseEntity<ByteArrayResource>  getPhotoById(@PathVariable Long id) throws IOException {
+        Topics topic = topicService.getTopicById(id);
+        String imagePath = topic.getImagePath();
+
+        Path imagePathObj = Paths.get(imagePath);
+        byte[] imageData = Files.readAllBytes(imagePathObj);
+        String contentType = Files.probeContentType(imagePathObj);
+        ByteArrayResource resource = new ByteArrayResource(imageData);
+        return ResponseEntity.ok()
+                .contentType(MediaType.parseMediaType(contentType))
+                .body(resource);
     }
 }

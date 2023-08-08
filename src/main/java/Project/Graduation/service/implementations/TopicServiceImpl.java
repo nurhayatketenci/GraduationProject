@@ -22,7 +22,7 @@ import java.util.List;
 public class TopicServiceImpl implements TopicService {
     @Autowired
     private TopicRepository topicRepository;
-    @Value("${app.upload.dir-topic}")
+    @Value("${app.upload.dir}")
     private String uploadDir;
 
     @Override

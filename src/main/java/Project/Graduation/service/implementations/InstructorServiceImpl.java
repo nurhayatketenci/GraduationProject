@@ -16,7 +16,7 @@ import Project.Graduation.service.InstructorService;
 import org.springframework.web.multipart.MultipartFile;
 
 @Service
-public class InstructorServiceImpl implements InstructorService{
+public class InstructorServiceImpl implements InstructorService {
 	private static Logger logger = LogManager.getLogger(InstructorServiceImpl.class);
 	@Autowired
     private InstructorRepository instructorRepository;
@@ -45,6 +45,7 @@ public class InstructorServiceImpl implements InstructorService{
 		Instructor oldInstructor=getInstructorById(id);
 		oldInstructor.setDescription(newInstructor.getDescription());
 		return instructorRepository.save(oldInstructor);
+
 	}
 
 	@Override

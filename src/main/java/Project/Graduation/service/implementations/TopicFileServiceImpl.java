@@ -3,29 +3,31 @@ package Project.Graduation.service.implementations;
 import Project.Graduation.exception.NoDataFoundException;
 import Project.Graduation.exception.RecordAlreadyExistsException;
 import Project.Graduation.model.TopicFiles;
-import Project.Graduation.model.Topics;
 import Project.Graduation.repository.TopicFileRepository;
-import Project.Graduation.repository.TopicRepository;
 import Project.Graduation.service.TopicFileService;
-import Project.Graduation.service.TopicService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.ResourceLoader;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
-
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.nio.file.FileAlreadyExistsException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
+
 @Service
 public class TopicFileServiceImpl implements TopicFileService {
-    @Value("${app.upload.dir-file}")
+    @Value("${app.upload.dir}")
     private String uploadDir;
+    private final Path root = Paths.get("uploads");
     @Autowired
     private TopicFileRepository topicFileRepository;
-
+    @Autowired
+    ResourceLoader resourceLoader;
 
     @Override
     public List<TopicFiles> getAllTopicFiles() {
@@ -65,22 +67,51 @@ public class TopicFileServiceImpl implements TopicFileService {
     }
 
     @Override
-    public String uploadFile(Long id, MultipartFile file) throws IOException {
-        TopicFiles topicFiles=getTopicFileById(id);
-        String fileName = StringUtils.cleanPath(file.getOriginalFilename());
-        String fileExtension=StringUtils.getFilenameExtension(fileName);
-        String newFileName = "topic_" + topicFiles.getId() + "." + fileExtension;
-        String uploadPath = uploadDir + "/" + newFileName;
-        Path uploadPathDir = Paths.get(uploadDir);
-        if (!Files.exists(uploadPathDir)) {
-            Files.createDirectories(uploadPathDir);
+    public void init() {
+        try {
+            Files.createDirectories(root);
+        } catch (IOException e) {
+            throw new RuntimeException("Could not initialize folder for upload!");
+        }
+    }
+
+    @Override
+    public List<TopicFiles> findByTopicsId(Long topicsId) {
+        List<TopicFiles> newList=this.topicFileRepository.findByTopicsId(topicsId);
+
+        return newList;
+    }
+
+
+    @Override
+    public String uploadFile(Long id, MultipartFile file) throws Exception {
+        TopicFiles topicFile = topicFileRepository.findById(id)
+                .orElseThrow(() -> new FileNotFoundException("File not found with id: " + id));
+
+        try {
+            String originalFilename = file.getOriginalFilename();
+            String fileExtension = originalFilename.substring(originalFilename.lastIndexOf("."));
+            String newFilename = topicFile.getHeader() + fileExtension;
+            Path newFilePath = this.root.resolve(newFilename);
+
+            if (Files.exists(newFilePath)) {
+                throw new FileAlreadyExistsException("A file with the same name already exists.");
+            }
+
+            Files.copy(file.getInputStream(), newFilePath);
+
+            // Veritabanında dosya yolunu güncelle
+            topicFile.setFilePath(newFilename);
+            topicFileRepository.save(topicFile);
+
+            return "File uploaded successfully.";
+        } catch (FileAlreadyExistsException e) {
+            throw new RuntimeException("A file with the same name already exists.");
+        } catch (Exception e) {
+            throw new RuntimeException("File upload failed: " + e.getMessage());
         }
 
-        Path uploadPathFile = Paths.get(uploadPath);
-        Files.deleteIfExists(uploadPathFile);
-        Files.copy(file.getInputStream(), uploadPathFile);
-        topicFiles.setFilePath(uploadPath);
-        topicFileRepository.save(topicFiles);
-        return uploadPath;
     }
+
+
 }

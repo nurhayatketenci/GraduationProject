@@ -11,6 +11,7 @@ import Project.Graduation.model.Instructor;
 import Project.Graduation.model.UserImage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -74,7 +75,7 @@ public class UserServiceImpl implements UserService{
 		Files.deleteIfExists(uploadPathFile);
 		Files.copy(file.getInputStream(), uploadPathFile);
 
-		user.setImagePath(uploadPath);
+		user.setImagePath(newFileName);
 		userRepository.save(user);
 
 		return uploadPath;

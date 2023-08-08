@@ -38,8 +38,7 @@ public class UserController {
     @Autowired
     private UserService userService;
 
-    @Value("${app.upload.dir}")
-    private String uploadDir;
+
     @Autowired
     public UserController(UserService userService) {
         this.userService = userService;
@@ -66,16 +65,16 @@ public class UserController {
     public ResponseEntity<User> createUser(@RequestBody User user){
     	return ResponseEntity.ok(userService.addUser(user));
     }
-    @PostMapping("/{id}/image")
+    @PostMapping("/uploadimage/{id}")
     public ResponseEntity<?> uploadImage(@PathVariable("id") Long userId,
                                          @RequestParam("image") MultipartFile image) throws IOException {
         String imagePath = userService.uploadImage(userId, image);
         return ResponseEntity.ok(imagePath);
     }
-    @GetMapping("/{id}/image/{imageName}")
-    public ResponseEntity<ByteArrayResource> getUserImage(@PathVariable String id,
-                                                          @PathVariable String imageName) throws IOException {
-        String imagePath = uploadDir + imageName;
+    @GetMapping("/image/{id}")
+    public ResponseEntity<ByteArrayResource> getUserImage(@PathVariable Long id) throws IOException {
+        User user=this.userService.getUserById(id);
+        String imagePath = user.getImagePath();
         Path imagePathObj = Paths.get(imagePath);
         byte[] imageData = Files.readAllBytes(imagePathObj);
         String contentType = Files.probeContentType(imagePathObj);

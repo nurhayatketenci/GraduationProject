@@ -1,5 +1,6 @@
 package Project.Graduation.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -11,6 +12,8 @@ import javax.persistence.*;
 @Table(name="topicfiles")
 @NoArgsConstructor
 @AllArgsConstructor
+
+
 public class TopicFiles {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
